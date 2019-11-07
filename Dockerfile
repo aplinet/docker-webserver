@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
             libpq-dev \
             gnupg && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \ 
-    && docker-php-ext-install zip intl gd gmp pgsql pdo_pgsql pdo_mysql exif opcache \
+    && docker-php-ext-install zip intl gd gmp pgsql pdo_pgsql pdo_mysql exif pcntl opcache \
     && pecl install xdebug-2.6.0 \
     && docker-php-ext-enable xdebug 
 RUN chmod -R 777 /usr/local/bin
