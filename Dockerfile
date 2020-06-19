@@ -26,7 +26,12 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable xdebug 
 RUN chmod -R 777 /usr/local/bin
 RUN mkdir -p /usr/share/man/man1
-RUN apt-get install -yq --no-install-recommends default-jdk
+RUN apt install -yq  apt-transport-https ca-certificates wget dirmngr gnupg software-properties-common
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
+RUN add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+RUN apt update
+RUN apt install -yq adoptopenjdk-8-hotspot
+
 #RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - && \
 # apt-get install -y nodejs
 
