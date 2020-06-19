@@ -25,6 +25,8 @@ RUN apt-get update && apt-get install -y \
     && pecl install xdebug-2.6.0 \
     && docker-php-ext-enable xdebug 
 RUN chmod -R 777 /usr/local/bin
+RUN mkdir -p /usr/share/man/man1
+RUN apt-get install -yq --no-install-recommends default-jdk
 #RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - && \
 # apt-get install -y nodejs
 
