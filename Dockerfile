@@ -38,7 +38,7 @@ COPY nginx.conf /etc/nginx/
 RUN ln -s /etc/nginx/sites-available/nginx-laravel /etc/nginx/sites-enabled/
 RUN rm /etc/nginx/sites-enabled/default
 # Install common tools
-RUN apt-get install -yq vim curl git zsh
+RUN apt-get install -yq vim curl zip git zsh
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Add user for laravel application
