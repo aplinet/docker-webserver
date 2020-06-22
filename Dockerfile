@@ -30,6 +30,7 @@ COPY 30-timezone.ini $PHP_CLI_INI_DIR/conf.d/
 COPY 30-xdebug.ini $PHP_CLI_INI_DIR/conf.d/  
 COPY 30-php-add.ini $PHP_CLI_INI_DIR/conf.d/  
 COPY www.conf /etc/php/7.2/fpm/pool.d/
+COPY php.ini /etc/php/7.2/fpm/php.ini
 
 # Install nginx
 RUN apt-get install -yq nginx
