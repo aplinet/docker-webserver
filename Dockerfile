@@ -3,8 +3,21 @@ ENV TZ=Europe/Warsaw
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_INI_DIR=/etc/php/7.2/fpm
 ENV PHP_CLI_INI_DIR=/etc/php/7.2/cli
+
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update
+# Install locales
+RUN apt-get install locales \
+&& locale-gen pl_PL \
+&& locale-gen pl_PL.UTF-8 
+ENV LANG="pl_PL.UTF-8"
+ENV LANGUAGE="pl_PL"
+RUN update-locale LANG=pl_PL.UTF-8 \
+&& update-locale LC_ALL=pl_PL.UTF-8 \
+&& update-locale \
+&& dpkg-reconfigure locales
+# Install fonts
+RUN apt-get install -yq fonts-open-sans
 # Install jdk 8
 RUN apt-get install -yq openjdk-8-jdk
 # Install php 7.2
