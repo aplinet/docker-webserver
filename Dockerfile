@@ -12,6 +12,7 @@ RUN apt-get install locales \
 && locale-gen pl_PL.UTF-8 
 ENV LANG="pl_PL.UTF-8"
 ENV LANGUAGE="pl_PL"
+ENV LC_ALL="pl_PL.UTF-8"
 RUN update-locale LANG=pl_PL.UTF-8 \
 && update-locale LC_ALL=pl_PL.UTF-8 \
 && update-locale \
@@ -52,7 +53,9 @@ COPY nginx.conf /etc/nginx/
 RUN ln -s /etc/nginx/sites-available/nginx-laravel /etc/nginx/sites-enabled/
 RUN rm /etc/nginx/sites-enabled/default
 # Install common tools
-RUN apt-get install -yq vim curl zip git zsh
+RUN apt-get install -yq software-properties-common
+RUN add-apt-repository ppa:xapienz/curl34 && apt-get update
+RUN apt-get install -yq vim wget curl zip git zsh
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Add user for laravel application
@@ -64,6 +67,16 @@ RUN groupadd -g 6123 www \
  && git clone https://github.com/zsh-users/zsh-autosuggestions /home/www/.oh-my-zsh/plugins/zsh-autosuggestions
 COPY .zshrc /home/www/
 RUN chown -R www:www /home/www/.oh-my-zsh && chown www:www /home/www/.zshrc && chmod 775 /home/www/.zshrc
+ENV NODE_VERSION 10
+ENV NVM_DIR /usr/local/nvm
+RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
+    && mkdir -p $NVM_DIR/versions \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 ENV DEBIAN_FRONTEND=interactive
 WORKDIR /var/www/html
 ENTRYPOINT service php7.2-fpm restart && service nginx restart && /bin/zsh
