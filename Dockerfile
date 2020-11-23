@@ -22,13 +22,16 @@ RUN apt-get install -yq fonts-open-sans
 # Install jdk 8
 RUN apt-get install -yq openjdk-8-jdk
 # Install php 7.2
-RUN apt-get install -yq php7.2-fpm \
+RUN apt-get update && apt-get install -yq php7.2-dev php7.2-fpm \
  php7.2-bcmath \
  php7.2-bz2 \
  php7.2-intl \
  php7.2-gd \
  php7.2-mbstring \
+ php7.2-curl \
  php7.2-mysql \
+ php7.2-memcache \
+ php7.2-memcached \
  php7.2-zip \
  php7.2-pgsql \
  php7.2-xml \
@@ -45,7 +48,8 @@ COPY 30-xdebug.ini $PHP_CLI_INI_DIR/conf.d/
 COPY 30-php-add.ini $PHP_CLI_INI_DIR/conf.d/  
 COPY www.conf /etc/php/7.2/fpm/pool.d/
 COPY php.ini /etc/php/7.2/fpm/php.ini
-
+RUN apt-get update && apt-get install php-pear && apt-get install pkg-config -y
+# RUN  apt-get update && apt-get install zlib1g-dev -y && apt-get install libmemcached-dev -y && printf "\n" | pecl install memcached  
 # Install nginx
 RUN apt-get install -yq nginx
 COPY nginx-laravel /etc/nginx/sites-available/ 
@@ -78,6 +82,7 @@ RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | b
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 ENV DEBIAN_FRONTEND=interactive
+COPY unset_env.sh /unset_env.sh
 WORKDIR /var/www/html
 ENTRYPOINT service php7.2-fpm restart && service nginx restart && /bin/zsh
 
